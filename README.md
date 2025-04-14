@@ -1,3 +1,18 @@
+# このリポジトリはフォークです。
+
+変更箇所
+* エディター部分を Monaco から CodeMirror へ変更
+  * これにより、スマートフォンでも正常にエディットできます
+* クエリパラメーターで gist のIDとファイル名を渡せるように変更
+  * 例えばこんな風に使います。[デモ](https://desktopgame.github.io/python-playground/?gist=dc4eb1bc28b33abfa9e961168b6718e4&file=gistfile1.txt)
+  * これにより、notionにnotion上で実行可能なコードを埋め込むことができます。
+
+オリジナル  
+https://github.com/vwh/python-playground
+
+
+# 以下、原文
+
 <div align="center">
 
 <a href="https://sqlite3.online/" target="_blank">
