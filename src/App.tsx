@@ -40,8 +40,6 @@ export default function App() {
         const file = urlParams.get("file");
         if (gistId) {
           const url = `https://api.github.com/gists/${gistId}`;
-          const res = await fetch(url);
-          const gist = await res.json();
           if (file) {
             const key = gistId + file;
             const cache = localStorage.getItem(key);
@@ -51,6 +49,8 @@ export default function App() {
                 await pipInstall(pipPackage);
               }
             } else {
+              const res = await fetch(url);
+              const gist = await res.json();
               const files = Object.values(gist.files) as any[];
               for (const fileItem of files) {
                 if (fileItem.filename === file) {
@@ -63,14 +63,6 @@ export default function App() {
                   localStorage.setItem(key, fileItem.content);
                   break;
                 }
-              }
-            }
-          } else {
-            const files = Object.values(gist.files) as any[];
-            if (files.length > 0) {
-              setCode(files[0].content);
-              for (const pipPackage of extractPipPackages(files[0].content)) {
-                await pipInstall(pipPackage);
               }
             }
           }
