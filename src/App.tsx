@@ -30,13 +30,22 @@ export default function App() {
         const res = await fetch(url);
         const gist = await res.json();
         if (file) {
-          const files = Object.values(gist.files) as any[];
-          for (const fileItem of files)
-          {
-            if (fileItem.filename === file)
+          const key = gistId + file;
+          const cache = localStorage.getItem(key);
+          if (cache !== null) {
+            console.log('load from cache.');
+            setCode(cache);
+          } else {
+            const files = Object.values(gist.files) as any[];
+            for (const fileItem of files)
             {
-              setCode(fileItem.content);
-              break;
+              if (fileItem.filename === file)
+              {
+                console.log('load from api.');
+                setCode(fileItem.content);
+                localStorage.setItem(key, fileItem.content)
+                break;
+              }
             }
           }
         } else {
