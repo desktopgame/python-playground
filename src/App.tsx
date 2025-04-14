@@ -23,11 +23,27 @@ export default function App() {
       await initializePyodide();
 
       const urlParams = new URLSearchParams(window.location.search);
-      const encodedParam = urlParams.get("v");
-      if (encodedParam) {
-        const decodedCode = getDecodedParam(encodedParam);
-        if (decodedCode) {
-          setCode(decodedCode);
+      const gistId = urlParams.get("gist");
+      const file = urlParams.get("file");
+      if (gistId) {
+        const url = `https://api.github.com/gists/${gistId}`;
+        const res = await fetch(url);
+        const gist = await res.json();
+        if (file) {
+          const files = Object.values(gist.files) as any[];
+          for (const fileItem of files)
+          {
+            if (fileItem.filename === file)
+            {
+              setCode(fileItem.content);
+              break;
+            }
+          }
+        } else {
+          const files = Object.values(gist.files) as any[];
+          if (files.length > 0) {
+            setCode(files[0].content);
+          }
         }
       }
     };
