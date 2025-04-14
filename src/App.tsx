@@ -27,6 +27,7 @@ export default function App() {
   // Initialize Pyodide and ( set the code from URL params if present )
   useEffect(() => {
     const extractPipPackages = (code: string): string[] => {
+      // eslint-disable-next-line
       const matches = [...code.matchAll(/^#\s*@pip\s+([\w\-]+)/gm)];
       return matches.map((m) => m[1]);
     };
