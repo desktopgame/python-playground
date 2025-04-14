@@ -60,6 +60,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       await pyodideInstance.loadPackage("micropip");
       const micropip = await pyodideInstance.pyimport("micropip");
       window.micropip = micropip;
+      window.pipPackages = [];
       set({ pyodide: pyodideInstance, isPyodideLoading: false });
     } catch (error) {
       console.error("Failed to load Pyodide:", error);
@@ -79,9 +80,11 @@ export const useStore = create<State & Actions>((set, get) => ({
     const lib = packageName.replace("pip install ", "").trim();
 
     if (!window.micropip || !lib) return;
+    if (window.pipPackages.includes(lib)) return;
     set({ isLibLoading: true });
 
     try {
+      window.pipPackages.push(lib);
       await window.micropip.install(lib, true);
       setOutput(`pip install ${lib} successfully installed`);
       setError(null);

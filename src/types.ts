@@ -16,5 +16,6 @@ declare global {
         keep_going?: boolean
       ) => Promise<void>;
     };
+    pipPackages: string[];
   }
 }
