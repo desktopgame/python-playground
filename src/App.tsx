@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/resizable";
 
 export default function App() {
-  const { direction, setCode, initializePyodide, pipInstall, isPyodideLoading } =
+  const { direction, setCode, initializePyodide, finishAppLoad, pipInstall, isPyodideLoading, isAppLoading } =
     useStore();
 
   // Initialize Pyodide and ( set the code from URL params if present )
@@ -26,52 +26,56 @@ export default function App() {
     const initializeApp = async () => {
       await initializePyodide();
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const gistId = urlParams.get("gist");
-      const file = urlParams.get("file");
-      if (gistId) {
-        const url = `https://api.github.com/gists/${gistId}`;
-        const res = await fetch(url);
-        const gist = await res.json();
-        if (file) {
-          const key = gistId + file;
-          const cache = localStorage.getItem(key);
-          if (cache !== null) {
-            setCode(cache);
-            for (const pipPackage of extractPipPackages(cache)) {
-              await pipInstall(pipPackage);
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gistId = urlParams.get("gist");
+        const file = urlParams.get("file");
+        if (gistId) {
+          const url = `https://api.github.com/gists/${gistId}`;
+          const res = await fetch(url);
+          const gist = await res.json();
+          if (file) {
+            const key = gistId + file;
+            const cache = localStorage.getItem(key);
+            if (cache !== null) {
+              setCode(cache);
+              for (const pipPackage of extractPipPackages(cache)) {
+                await pipInstall(pipPackage);
+              }
+            } else {
+              const files = Object.values(gist.files) as any[];
+              for (const fileItem of files)
+              {
+                if (fileItem.filename === file)
+                {
+                  setCode(fileItem.content);
+                  for (const pipPackage of extractPipPackages(fileItem.content)) {
+                    await pipInstall(pipPackage);
+                  }
+                  localStorage.setItem(key, fileItem.content)
+                  break;
+                }
+              }
             }
           } else {
             const files = Object.values(gist.files) as any[];
-            for (const fileItem of files)
-            {
-              if (fileItem.filename === file)
-              {
-                setCode(fileItem.content);
-                for (const pipPackage of extractPipPackages(fileItem.content)) {
-                  await pipInstall(pipPackage);
-                }
-                localStorage.setItem(key, fileItem.content)
-                break;
+            if (files.length > 0) {
+              setCode(files[0].content);
+              for (const pipPackage of extractPipPackages(files[0].content)) {
+                await pipInstall(pipPackage);
               }
             }
           }
-        } else {
-          const files = Object.values(gist.files) as any[];
-          if (files.length > 0) {
-            setCode(files[0].content);
-            for (const pipPackage of extractPipPackages(files[0].content)) {
-              await pipInstall(pipPackage);
-            }
-          }
         }
+      } finally {
+        finishAppLoad();
       }
     };
 
     initializeApp();
   }, [initializePyodide, setCode]);
 
-  if (isPyodideLoading) {
+  if (isPyodideLoading || isAppLoading) {
     return <LoadingScreen />;
   }
 

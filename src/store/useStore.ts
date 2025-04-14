@@ -10,6 +10,7 @@ interface State {
   direction: Direction;
   pyodide: PyodideInterface | null;
   isPyodideLoading: boolean;
+  isAppLoading: boolean;
   isCodeExecuting: boolean;
   isLibLoading: boolean;
 }
@@ -22,6 +23,7 @@ interface Actions {
   setDirection: (direction: Direction) => void;
   initializePyodide: () => Promise<void>;
   pipInstall: (packageName: string) => Promise<void>;
+  finishAppLoad: () => void;
   runCode: (code: string) => Promise<void>;
 }
 
@@ -32,6 +34,7 @@ const initialState: State = {
   direction: "vertical",
   pyodide: null,
   isPyodideLoading: true,
+  isAppLoading: true,
   isCodeExecuting: false,
   isLibLoading: false
 };
@@ -65,6 +68,10 @@ export const useStore = create<State & Actions>((set, get) => ({
         isPyodideLoading: false
       });
     }
+  },
+
+  finishAppLoad: (): void => {
+    set({ isAppLoading: false });
   },
 
   pipInstall: async (packageName: string) => {
