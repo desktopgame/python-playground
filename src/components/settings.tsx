@@ -16,7 +16,6 @@ import {
 
 import {
   DownloadIcon,
-  UploadIcon,
   SettingsIcon,
   LoaderIcon
 } from "lucide-react";
@@ -56,14 +55,6 @@ export default function Settings() {
     },
     [pipInstall]
   );
-
-  const handleCodeShare = useCallback(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("v", btoa(code));
-    const newUrl = `${window.location.origin}${window.location.pathname}?${urlParams.toString()}${window.location.hash}`;
-    window.history.replaceState({}, document.title, newUrl);
-    navigator.clipboard.writeText(newUrl);
-  }, [code]);
 
   return (
     <Drawer>
@@ -118,15 +109,6 @@ export default function Settings() {
               >
                 <DownloadIcon className="mr-2 h-5 w-5" />
                 <span>Download Code</span>
-              </Button>
-              <Button
-                title="Share the code"
-                variant="secondary"
-                onClick={handleCodeShare}
-                className="flex items-center justify-center"
-              >
-                <UploadIcon className="mr-2 h-5 w-5" />
-                <span>Share Code</span>
               </Button>
             </SettingsSection>
           </div>
