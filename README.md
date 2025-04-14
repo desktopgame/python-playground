@@ -6,6 +6,8 @@
 * クエリパラメーターで gist のIDとファイル名を渡せるように変更
   * 例えばこんな風に使います。[デモ](https://desktopgame.github.io/python-playground/?gist=dc4eb1bc28b33abfa9e961168b6718e4&file=gistfile1.txt)
   * これにより、notionにnotion上で実行可能なコードを埋め込むことができます。
+  * また、このときマジックコメントを読み取って自動でパッケージをインストールします。
+    * `# @pip package-name` のように指定します。
 
 オリジナル  
 https://github.com/vwh/python-playground
