@@ -109,7 +109,7 @@ function LoadingScreen() {
           className="h-52 w-52 animate-pulse"
         />
         <p className="sm:text-1xl mt-2 animate-pulse whitespace-pre-wrap text-center text-xl font-semibold tracking-tighter text-white">
-          Loading WebAssembly
+          Loading...
         </p>
       </div>
     </section>
