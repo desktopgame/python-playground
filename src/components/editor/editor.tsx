@@ -1,8 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { useStore } from "@/store/useStore";
 
-import MonacoEditor, { type OnMount } from "@monaco-editor/react";
-import Loader from "@/components/loader";
+// import MonacoEditor, { type OnMount } from "@monaco-editor/react";
+import ReactCodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode"
+import { pythonLanguage } from "@codemirror/lang-python"
+// import Loader from "@/components/loader";
 
 export default function Editor() {
   const { code, setCode } = useStore();
@@ -16,42 +19,16 @@ export default function Editor() {
     [setCode]
   );
 
-  const editorOptions = useMemo(
-    () => ({
-      minimap: { enabled: false },
-      scrollBeyondLastLine: false,
-      fontSize: 14,
-      fontFamily: "'Fira Code', monospace",
-      fontLigatures: true,
-      cursorSmoothCaretAnimation: "on",
-      smoothScrolling: true,
-      padding: { top: 16, bottom: 16 },
-      renderLineHighlight: "all",
-      matchBrackets: "always",
-      autoClosingBrackets: "always",
-      autoClosingQuotes: "always",
-      formatOnPaste: true,
-      formatOnType: true
-    }),
-    []
-  );
-
-  const handleEditorDidMount: OnMount = useCallback((editor) => {
-    editor.focus();
-  }, []);
-
   return (
     <div className="h-full w-full overflow-hidden rounded-lg shadow-lg">
-      <MonacoEditor
-        defaultLanguage="python"
-        theme="vs-dark"
+      <ReactCodeMirror
         value={code}
         onChange={handleCodeOnChange}
-        loading={<Loader text="Initializing Editor" />}
-        // @ts-expect-error ts(2322)
-        options={editorOptions}
-        onMount={handleEditorDidMount}
+        theme={vscodeDark}
+        extensions={[pythonLanguage]}
+        height="100%"
         className="h-full w-full"
+        autoFocus={true}
       />
     </div>
   );
