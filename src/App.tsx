@@ -33,7 +33,6 @@ export default function App() {
           const key = gistId + file;
           const cache = localStorage.getItem(key);
           if (cache !== null) {
-            console.log('load from cache.');
             setCode(cache);
           } else {
             const files = Object.values(gist.files) as any[];
@@ -41,7 +40,6 @@ export default function App() {
             {
               if (fileItem.filename === file)
               {
-                console.log('load from api.');
                 setCode(fileItem.content);
                 localStorage.setItem(key, fileItem.content)
                 break;
