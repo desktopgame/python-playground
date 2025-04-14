@@ -14,11 +14,7 @@ import {
   DrawerTrigger
 } from "./ui/drawer";
 
-import {
-  DownloadIcon,
-  SettingsIcon,
-  LoaderIcon
-} from "lucide-react";
+import { DownloadIcon, SettingsIcon, LoaderIcon } from "lucide-react";
 
 interface SettingsSectionProps {
   title: string;

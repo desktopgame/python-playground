@@ -3,8 +3,8 @@ import { useStore } from "@/store/useStore";
 
 // import MonacoEditor, { type OnMount } from "@monaco-editor/react";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode"
-import { pythonLanguage } from "@codemirror/lang-python"
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { pythonLanguage } from "@codemirror/lang-python";
 // import Loader from "@/components/loader";
 
 export default function Editor() {
