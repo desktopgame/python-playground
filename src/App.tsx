@@ -14,11 +14,15 @@ import {
 } from "@/components/ui/resizable";
 
 export default function App() {
-  const { direction, setCode, initializePyodide, isPyodideLoading } =
+  const { direction, setCode, initializePyodide, pipInstall, isPyodideLoading } =
     useStore();
 
   // Initialize Pyodide and ( set the code from URL params if present )
   useEffect(() => {
+    const extractPipPackages = (code: string): string[] =>  {
+      const matches = [...code.matchAll(/^#\s*@pip\s+([\w\-]+)/gm)];
+      return matches.map(m => m[1]);
+    };
     const initializeApp = async () => {
       await initializePyodide();
 
@@ -34,6 +38,9 @@ export default function App() {
           const cache = localStorage.getItem(key);
           if (cache !== null) {
             setCode(cache);
+            for (const pipPackage of extractPipPackages(cache)) {
+              await pipInstall(pipPackage);
+            }
           } else {
             const files = Object.values(gist.files) as any[];
             for (const fileItem of files)
@@ -41,6 +48,9 @@ export default function App() {
               if (fileItem.filename === file)
               {
                 setCode(fileItem.content);
+                for (const pipPackage of extractPipPackages(fileItem.content)) {
+                  await pipInstall(pipPackage);
+                }
                 localStorage.setItem(key, fileItem.content)
                 break;
               }
@@ -50,6 +60,9 @@ export default function App() {
           const files = Object.values(gist.files) as any[];
           if (files.length > 0) {
             setCode(files[0].content);
+            for (const pipPackage of extractPipPackages(files[0].content)) {
+              await pipInstall(pipPackage);
+            }
           }
         }
       }
