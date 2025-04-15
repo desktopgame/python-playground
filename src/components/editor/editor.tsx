@@ -5,6 +5,7 @@ import { useStore } from "@/store/useStore";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { pythonLanguage } from "@codemirror/lang-python";
+import { indentUnit } from "@codemirror/language";
 // import Loader from "@/components/loader";
 
 export default function Editor() {
@@ -25,7 +26,7 @@ export default function Editor() {
         value={code}
         onChange={handleCodeOnChange}
         theme={vscodeDark}
-        extensions={[pythonLanguage]}
+        extensions={[pythonLanguage, indentUnit.of("    ")]}
         height="100%"
         className="h-full w-full"
         autoFocus={true}
