@@ -102,12 +102,10 @@ export const useStore = create<State & Actions>((set, get) => ({
     set({ isCodeExecuting: true });
     try {
       setError(null);
-      const printOutput: string[] = [];
 
       pyodide.globals.set("print", (...args: any[]) => {
         const result = args.join(" ");
-        printOutput.push(result);
-        setOutput(printOutput.join("\n"));
+        setOutput(result);
       });
 
       await pyodide.runPythonAsync(code);
